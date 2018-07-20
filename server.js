@@ -2,38 +2,36 @@ var net = require('net');
 const clients = [];
 
 // We recieve the socket in param
-var server = net.createServer(function(connection) {
+var server = net.createServer(function(socket) {
 
 	console.log('A client is connected'); // Notify when a client comes in
-	connection.setEncoding('UTF8');
+	socket.setEncoding('UTF8');
 
-	clients.push(connection); // Stored connection in the clients arr
-	console.log("Num of clients: ", clients.length);
+	clients.push(socket); // Stored socket in the clients arr
+	console.log(`Num of clients: ${clients.length} \n`);
 
-	clients.forEach((client) => {
-		if(client === connection) {
-			client.on('data', function(data){
-				console.log(data);
-			})
-		}
-	});
+		clients.forEach((client, index) => { // Pipes back information that comes in
+			console.log(index);
 
-	// -------------------------------------------
+			if(socket !== client) {
+				socket.pipe(client);
+			}
+		});
 	
-	connection.on('end', function() {
-			console.log('5) clients disconnected');
+	socket.on('end', function() {
+			console.log('A client disconnected');
 	 });
 });
 
-server.listen(8080, function() { 
-   console.log('1) server is listening');
+server.listen(3000, function() { 
+   console.log('Server is listening');
 });
 
 /*
  // Listens on what is piped in and writes back to server
-connection.on('data', function(data){
+socket.on('data', function(data){
 	console.log(data);
-	connection.write("Server wrote back!");
+	socket.write("Server wrote back!");
 })
 */
 
