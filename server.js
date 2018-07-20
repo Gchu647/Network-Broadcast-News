@@ -10,17 +10,13 @@ var server = net.createServer(function(connection) {
 	clients.push(connection); // Stored connection in the clients arr
 	console.log("Num of clients: ", clients.length);
 
-	if(clients[0]) {
-		clients[0].on('data', function(data){
-		console.log(data);
-		})
-	}
-
-	if(clients[1]) {
-		clients[1].on('data', function(data){
-		console.log(data);
-		})
-	}
+	clients.forEach((client) => {
+		if(client === connection) {
+			client.on('data', function(data){
+				console.log(data);
+			})
+		}
+	});
 
 	// -------------------------------------------
 	
