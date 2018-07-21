@@ -15,6 +15,7 @@ var server = net.createServer(function(socket) {
 
 			if(socket !== client) {
 				socket.pipe(client);
+				client.pipe(socket);
 			}
 		});
 	
